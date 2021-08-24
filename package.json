@@ -1,4 +1,5 @@
 {
+  "homepage": "https://github.com/lythanhkhiet123/ecommerce-typescript.git",
   "name": "shopspree",
   "version": "0.1.0",
   "private": true,
@@ -18,6 +19,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "gh-pages": "^3.2.3",
     "immutability-helper": "^3.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -35,7 +37,9 @@
     "start-api": "node server-api/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
