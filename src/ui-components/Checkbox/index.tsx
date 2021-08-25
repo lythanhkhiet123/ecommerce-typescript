@@ -1,33 +1,38 @@
 import React from 'react';
 import { CheckboxProps, CheckboxState } from './interface';
-import './style.css';
+import {
+  CheckBoxContainerDiv,
+  GlobalStyle,
+  CheckBoxChildrenSpan,
+} from './style';
 
 class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
-    constructor(props: CheckboxProps) {
-        super(props);
-        this.state = {
-            value: props.initialValue || false,
-        }
-    }
+  constructor(props: CheckboxProps) {
+    super(props);
+    this.state = {
+      value: props.initialValue || false,
+    };
+  }
 
-    handleCheckboxClick = () => {
-        const newValue = !this.state.value;
-        this.setState({ value: newValue });
+  render() {
+    const { children } = this.props;
+    const { value } = this.state;
+    const iconClassName = value ? 'fa fa-check-square' : 'fa fa-square-o';
 
-        this.props.onChange(newValue);
-    }
+    const onClick = () => {
+      const newValue = !this.state.value;
+      this.setState({ value: newValue });
+      this.props.onChange(newValue);
+    };
 
-    render() {
-        const { value } = this.state;
-        const iconClassName = value ? 'fa fa-check-square' : 'fa fa-square-o'
+    return (
+      <CheckBoxContainerDiv onClick={onClick}>
+        <GlobalStyle />
+        <i className={`${iconClassName} checkbox-icon `} aria-hidden="true"></i>
 
-        return (
-            <label className="checkbox-container" onClick={this.handleCheckboxClick}>
-                <i className={`${iconClassName} checkbox-icon`} aria-hidden="true"></i>
-                <span className="checkbox-children">{this.props.children}</span>
-            </label>
-        );
-    }
+        <CheckBoxChildrenSpan>{children}</CheckBoxChildrenSpan>
+      </CheckBoxContainerDiv>
+    );
+  }
 }
-
 export default Checkbox;

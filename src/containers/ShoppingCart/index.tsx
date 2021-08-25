@@ -1,5 +1,9 @@
 import React from 'react';
-import { connect, MapDispatchToPropsFunction, MapStateToProps } from 'react-redux';
+import {
+  connect,
+  MapDispatchToPropsFunction,
+  MapStateToProps,
+} from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ShoppingCartProduct } from '../../components/ShoppingCartProduct';
 import { ROUTE } from '../../constants/route';
@@ -8,91 +12,127 @@ import { ProductPurchase } from '../../store/reducers/userReducer';
 import { StoreStateType } from '../../store/rootReducer';
 import { Button } from '../../ui-components/Button';
 import Popover from '../../ui-components/Popover';
-import { ShoppingCartDispatchProps, ShoppingCartOwnProps, ShoppingCartProps, ShoppingCartState, ShoppingCartStateProps } from './interface';
-import './style.css';
+import {
+  ShoppingCartDispatchProps,
+  ShoppingCartOwnProps,
+  ShoppingCartProps,
+  ShoppingCartState,
+  ShoppingCartStateProps,
+} from './interface';
+import {
+  ShoppingCartContainer,
+  ShopCartNotification,
+  ShoppingCartContainerPopover,
+  GlobalStyles,
+  ShoppingCartAllProducts,
+} from './style';
 
-class ShoppingCart extends React.Component<ShoppingCartProps, ShoppingCartState> {
-    constructor(props: ShoppingCartProps) {
-        super(props);
+class ShoppingCart extends React.Component<
+  ShoppingCartProps,
+  ShoppingCartState
+> {
+  constructor(props: ShoppingCartProps) {
+    super(props);
 
-        this.state = {
-            showPopover: false,
-        }
-    }
+    this.state = {
+      showPopover: false,
+    };
+  }
 
-    handlePopoverClick = () => {
-        const { cart } = this.props;
-        cart.length && this.setState({ showPopover: !this.state.showPopover });
-    }
+  handlePopoverClick = () => {
+    const { cart } = this.props;
+    cart.length && this.setState({ showPopover: !this.state.showPopover });
+  };
 
-    handleRemoveToCart = (product: ProductPurchase) => {
-        const { cart } = this.props;
-        cart.length === 1 && this.setState({ showPopover: false })
-        this.props.removeToCart(product);
-    }
+  handleRemoveToCart = (product: ProductPurchase) => {
+    const { cart } = this.props;
+    cart.length === 1 && this.setState({ showPopover: false });
+    this.props.removeToCart(product);
+  };
 
-    getAllProducts = () => {
-        const { cart, removeToCart } = this.props;
-        return cart.map(product => (
-            <ShoppingCartProduct
-                key={`${product.productId}-${product.variantId}`}
-                product={product}
-                removeToCart={this.handleRemoveToCart}
-            />) );
-    }
+  getAllProducts = () => {
+    const { cart, removeToCart } = this.props;
+    return cart.map((product) => (
+      <ShoppingCartProduct
+        key={`${product.productId}-${product.variantId}`}
+        product={product}
+        removeToCart={this.handleRemoveToCart}
+      />
+    ));
+  };
 
-    render() {
-        const { cart } = this.props;
-        const { showPopover } = this.state;
-        const cartLength = cart.length;
+  render() {
+    const { cart } = this.props;
+    const { showPopover } = this.state;
+    const cartLength = cart.length;
 
-        const notificationUI = cartLength ? (
-            <div className="shop-cart-notification">{cartLength}</div>
-        ): null;
+    const notificationUI = cartLength ? (
+      <ShopCartNotification>{cartLength}</ShopCartNotification>
+    ) : null;
 
-        const popoverContent = (
-            <div className="shopping-cart-container-popover">
-                <div className="shopping-cart-all-products">{this.getAllProducts()}</div>
-                <Link to={ROUTE.CHECKOUT} component={({ navigate }) => (
-                    <Button
-                        className="checkout-button"
-                        type="primary"
-                        onClick={() => {
-                            navigate();
-                            this.handlePopoverClick();
-                        }}
-                    >
-                        Checkout
-                    </Button>
-                )} />
-            </div>
-        )
+    const popoverContent = (
+      <ShoppingCartContainerPopover>
+        <ShoppingCartAllProducts>
+          {this.getAllProducts()}
+        </ShoppingCartAllProducts>
+        <Link
+          to={ROUTE.CHECKOUT}
+          component={({ navigate }) => (
+            <Button
+              className="checkout-button"
+              type="primary"
+              onClick={() => {
+                navigate();
+                this.handlePopoverClick();
+              }}
+            >
+              Checkout
+            </Button>
+          )}
+        />
+      </ShoppingCartContainerPopover>
+    );
 
-        return (
-            <Popover controlShow={showPopover} onClick={this.handlePopoverClick} position="bottomleft" content={popoverContent}>
-                <div className="shopping-cart-container">
-                    <i className="nav-item fa fa-shopping-cart"></i>
-                    {notificationUI}
-                </div>
-            </Popover>
-        );
-    }
+    return (
+      <div>
+        <GlobalStyles />
+        <Popover
+          controlShow={showPopover}
+          onClick={this.handlePopoverClick}
+          position="bottomleft"
+          content={popoverContent}
+        >
+          <ShoppingCartContainer>
+            <i className="nav-item fa fa-shopping-cart"></i>
+            {notificationUI}
+          </ShoppingCartContainer>
+        </Popover>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps: MapStateToProps<ShoppingCartStateProps, ShoppingCartOwnProps, StoreStateType> = (state) => {
-    const { cart } = state.user;
-    
-    return {
-        cart
-    }
-}
+const mapStateToProps: MapStateToProps<
+  ShoppingCartStateProps,
+  ShoppingCartOwnProps,
+  StoreStateType
+> = (state) => {
+  const { cart } = state.user;
 
-const mapDispatchToProps: MapDispatchToPropsFunction<ShoppingCartDispatchProps, ShoppingCartOwnProps> = (dispatch) => {
-    const { removeToCart } = new UserAction();
+  return {
+    cart,
+  };
+};
 
-    return {
-        removeToCart: (productPurchase) => dispatch(removeToCart(productPurchase))
-    }
-}
+const mapDispatchToProps: MapDispatchToPropsFunction<
+  ShoppingCartDispatchProps,
+  ShoppingCartOwnProps
+> = (dispatch) => {
+  const { removeToCart } = new UserAction();
+
+  return {
+    removeToCart: (productPurchase) => dispatch(removeToCart(productPurchase)),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingCart);

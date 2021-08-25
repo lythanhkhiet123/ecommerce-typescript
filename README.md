@@ -1,7 +1,6 @@
 # Getting Started with react-ts-tutorial-ecom-shop-udemy-master
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). This is the starting project
-pint for the React Typescript Tutorial Ecommerce Shop in Udemy.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## How to setup
 
@@ -16,9 +15,11 @@ pint for the React Typescript Tutorial Ecommerce Shop in Udemy.
 In the project directory, you can run:
 
 ### `yarn install`
+
 Install all the packages and libraries needed for our project.
 
 ### `yarn start-api`
+
 Run the NodeJS application that will be use the API for our project to manage products/orders data.
 
 ### `yarn start`
